@@ -22,7 +22,7 @@ const App = () => {
                 <div className="collpase navbar-collapse">
                     <ul className="navbar-nav mr-auto">
                         <li className="navbar-item">
-                            <Link to="/" className="nav-link">Todos</Link>
+                            <Link to="/" className="nav-link">Todosss</Link>
                         </li>
                         <li className="navbar-item">
                             <Link to="/create" className="nav-link">Create Todo</Link>
