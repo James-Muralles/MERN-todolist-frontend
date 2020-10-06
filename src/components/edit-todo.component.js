@@ -12,17 +12,17 @@ export default function EditTodo({ match: { params }, history }) {
         axios
             .get(`http://localhost:1337/api/todos/${params.id}`)
             .then(res => {
-                const {
-                    todoCompleted,
-                    todoDesc,
-                    todoPriority,
-                    todoResponsible
-                } = res.data;
+                // const {
+                //     todoDesc,
+                //     todoResponsible,
+                //     todoPriority,
+                //     todoCompleted,
+                // } = res.data;
                 console.log(res.data);
-                setTodoCompleted(todoCompleted);
-                setTodoDesc(todoDesc);
-                setTodoPriority(todoPriority);
-                setTodoResponsible(todoResponsible);
+                setTodoDesc(res.data.todo_description);
+                setTodoResponsible(res.data.todo_responsible);
+                setTodoPriority(res.data.todo_priority);
+                setTodoCompleted(res.data.todo_completed);
             })
             .then(() => setIsLoading(false))
             .catch(err => {
@@ -30,21 +30,32 @@ export default function EditTodo({ match: { params }, history }) {
             });
     }, [params.id]);
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
+        console.log(`change submitted:`);
+        console.log(`Todo Description: ${todoDesc}`);
+        console.log(`Todo Responsible: ${todoResponsible}`);
+        console.log(`Todo Priority: ${todoPriority}`);
 
-        const newTodo = {
-            todoDesc: todoDesc,
-            todoResponsible: todoResponsible,
-            todoPriority: todoPriority,
-            todoCompleted: todoCompleted
+
+        let newTodo = {
+            todo_description: todoDesc,
+            todo_responsible: todoResponsible,
+            todo_priority: todoPriority,
+            todo_completed: todoCompleted
         };
         console.log(newTodo);
 
-        axios
+       await axios
             .post(`http://localhost:1337/api/todos/update/${params.id}`, newTodo)
-            .then(res => (res.data.json))
+            .then(res => {
+                // setTodoDesc(newTodo.todoDesc);
+                console.log(res.data);
+                // setTodoResponsible(res.data.todo_responsible);
+                // setTodoPriority(res.data.todo_priority);
+                // setTodoCompleted(res.data.todo_completed);
+            })
             .then(() => history.push("/"));
         console.log(newTodo);
 
@@ -67,8 +78,10 @@ export default function EditTodo({ match: { params }, history }) {
                     <input
                         type="text"
                         className="form-control"
-                        value={todoDesc || ''}
-                        onChange={e => setTodoDesc(e.target.value)}
+                        value={todoDesc}
+                        onChange={e => {
+                            console.log(todoDesc);
+                            setTodoDesc(e.target.value)}}
                     />
                 </div>
                 <div className="form-group">
@@ -76,7 +89,7 @@ export default function EditTodo({ match: { params }, history }) {
                     <input
                         type="text"
                         className="form-control"
-                        value={todoResponsible || ''}
+                        value={todoResponsible}
                         onChange={e => setTodoResponsible(e.target.value)}
                     />
                 </div>
@@ -88,7 +101,7 @@ export default function EditTodo({ match: { params }, history }) {
                             name="priorityOptions"
                             id="priorityLow"
                             value="Low"
-                            checked={todoPriority === "Low" || ''}
+                            checked={todoPriority === "Low" }
                             onChange={e => setTodoPriority(e.target.value)}
                         />
                         <label htmlFor="priorityLow" className="form-check-label">
@@ -102,7 +115,7 @@ export default function EditTodo({ match: { params }, history }) {
                             name="priorityOptions"
                             id="priorityMedium"
                             value="Medium"
-                            checked={todoPriority === "Medium" || ''}
+                            checked={todoPriority === "Medium"}
                             onChange={e => setTodoPriority(e.target.value)}
                         />
                         <label htmlFor="priorityMedium" className="form-check-label">
@@ -116,7 +129,7 @@ export default function EditTodo({ match: { params }, history }) {
                             name="priorityOptions"
                             id="priorityHigh"
                             value="High"
-                            checked={todoPriority === "High" || ''}
+                            checked={todoPriority === "High"}
                             onChange={e => setTodoPriority(e.target.value)}
                         />
                         <label htmlFor="priorityHigh" className="form-check-label">
@@ -130,8 +143,8 @@ export default function EditTodo({ match: { params }, history }) {
                         className="form-check-input"
                         name="completedCheckbox"
                         id="completedCheckbox"
-                        value={todoCompleted || ''}
-                        checked={todoCompleted || ''}
+                        value={todoCompleted }
+                        checked={todoCompleted }
                         onChange={e => setTodoCompleted(!todoCompleted)}
                     />
                     <label htmlFor="completedCheckbox" className="form-check-label">

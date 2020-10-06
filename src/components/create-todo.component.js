@@ -24,7 +24,7 @@ setTodo_Priority(e.target.value)
 const onSubmit = (e) => {
         e.preventDefault();
 
-        console.log(`Form submitted:`);
+        console.log(`change submitted:`);
         console.log(`Todo Description: ${todo_Description}`);
         console.log(`Todo Responsible: ${todo_Responsibility}`);
         console.log(`Todo Priority: ${todo_Priority}`);
