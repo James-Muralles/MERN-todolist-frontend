@@ -1,6 +1,7 @@
 import React, {useState} from "react";
+import axios from 'axios';
 
-const CreateTodo = () =>{
+const CreateTodo = ({ match: { params }, history }) =>{
 
     const [todo_Description, setTodo_Description] = useState("");
     const [todo_Responsibility, setTodo_Responsibility] = useState("");
@@ -28,10 +29,20 @@ const onSubmit = (e) => {
         console.log(`Todo Responsible: ${todo_Responsibility}`);
         console.log(`Todo Priority: ${todo_Priority}`);
 
+    const newTodo = {
+        todo_description: todo_Description,
+        todo_responsible: todo_Responsibility,
+        todo_priority: todo_Priority,
+        todo_completed: todo_completed
+    };
+
+    axios.post('http://localhost:1337/api/todos', newTodo)
+        .then(res => console.log(res.data))
+        .then(() => history.push("/"));
         setTodo_Responsibility("");
         setTodo_Description("");
         setTodo_Priority("");
-        setTodo_completed(false);
+        setTodo_completed(false)
     };
 
 
